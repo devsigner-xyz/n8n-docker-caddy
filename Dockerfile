@@ -6,13 +6,15 @@ ENV N8N_PORT=5678
 ENV N8N_PROTOCOL=https
 ENV NODE_ENV=production
 ENV GENERIC_TIMEZONE=UTC
+ENV N8N_METRICS=true
+ENV QUEUE_HEALTH_CHECK_ACTIVE=true
 
 # Expose the port
 EXPOSE 5678
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:5678/rest/health || exit 1
+    CMD curl -f http://localhost:5678/healthz/readiness || exit 1
 
 # Start n8n
 CMD ["n8n", "start"] 
