@@ -51,8 +51,15 @@ This will:
 
 #### Railway Deployment
 1. Connect your GitHub repository to Railway
-2. Railway will automatically detect the Docker setup
-3. Set the environment variables in Railway's dashboard
+2. Railway will automatically detect the Dockerfile and railway.toml
+3. Set the following environment variables in Railway's dashboard:
+   ```bash
+   N8N_HOST=0.0.0.0
+   N8N_PORT=5678
+   N8N_PROTOCOL=https
+   WEBHOOK_URL=https://your-railway-url.up.railway.app/
+   GENERIC_TIMEZONE=UTC
+   ```
 4. Deploy the application
 
 ### 3. Access n8n
@@ -64,19 +71,6 @@ https://localhost
 ```
 
 Note: Your browser might show a security warning because of the self-signed certificate. This is normal for local development.
-
-##### Using ngrok for Telegram Webhooks
-To use Telegram webhooks in local development:
-
-1. Install ngrok from [https://ngrok.com/download](https://ngrok.com/download)
-2. Start a tunnel to your local n8n instance:
-   ```bash
-   ngrok http https://localhost
-   ```
-3. Copy the HTTPS URL provided by ngrok (it will look like `https://xxxx-xx-xx-xx-xx.ngrok.io`)
-4. In n8n, update the Telegram trigger node with the ngrok URL:
-   - Add `/webhook-test` to the ngrok URL
-   - Example: `https://xxxx-xx-xx-xx-xx.ngrok.io/webhook-test`
 
 #### Railway Deployment
 Access n8n through your Railway URL:
@@ -123,8 +117,8 @@ n8n is configured through environment variables. Key settings include:
 
 When deploying to Railway:
 1. Railway will automatically handle SSL/TLS termination
-2. You don't need to configure Caddy for Railway deployments
-3. Set the `WEBHOOK_URL` to your Railway URL
+2. The application will be built using the provided Dockerfile
+3. Set the environment variables in Railway's dashboard
 4. Railway will provide a random URL for your deployment
 5. You can add a custom domain in Railway's dashboard if needed
 
@@ -136,10 +130,6 @@ If you encounter issues:
 3. Ensure ports 443 and 5678 are not in use by other services (local only)
 4. Check volume permissions (local only)
 5. For local development, accept the self-signed certificate in your browser
-6. For Telegram webhooks:
-   - Make sure you're using the ngrok HTTPS URL
-   - Add `/webhook-test` to the ngrok URL
-   - Verify the ngrok tunnel is active
 
 ## Support
 
