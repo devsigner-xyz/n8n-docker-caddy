@@ -1,5 +1,15 @@
-n8n.<domain>.<suffix> {
+localhost {
+    tls internal
+
+    @noCompressSSE {
+        header Content-Type text/event-stream
+    }
+
+    encode gzip zstd {
+        not @noCompressSSE
+    }
+
     reverse_proxy n8n:5678 {
-      flush_interval -1
+        flush_interval -1
     }
 }

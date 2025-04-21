@@ -5,12 +5,11 @@ services:
     image: caddy:latest
     restart: unless-stopped
     ports:
-      - "80:80"
       - "443:443"
     volumes:
       - caddy_data:/data
-      - ${DATA_FOLDER}/caddy_config:/config
-      - ${DATA_FOLDER}/caddy_config/Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy_config:/etc/caddy
+    command: ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
 
   n8n:
     image: docker.n8n.io/n8nio/n8n
@@ -18,11 +17,11 @@ services:
     ports:
       - 5678:5678
     environment:
-      - N8N_HOST=${SUBDOMAIN}.${DOMAIN_NAME}
+      - N8N_HOST=${N8N_HOST:-localhost}
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
       - NODE_ENV=production
-      - WEBHOOK_URL=https://${SUBDOMAIN}.${DOMAIN_NAME}/
+      - WEBHOOK_URL=${WEBHOOK_URL:-https://localhost/}
       - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
     volumes:
       - n8n_data:/home/node/.n8n
@@ -30,6 +29,4 @@ services:
       
 volumes:
   caddy_data:
-    external: true
   n8n_data:
-    external: true
